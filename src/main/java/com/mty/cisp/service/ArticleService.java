@@ -5,9 +5,6 @@ import com.mty.cisp.vo.ArticleVO;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by mty on 2019-02-16
- */
 @Service
 public interface ArticleService {
 

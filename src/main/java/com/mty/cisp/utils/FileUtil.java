@@ -13,9 +13,6 @@ import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Created by mty on 2019-02-18
- */
 
 public class FileUtil {
 
@@ -24,7 +21,7 @@ public class FileUtil {
   private static final String SECRET_KEY = "aQtmNi3Zvo_qDJ-8tBQ1tObNxJ-M95Bkr2ndIpDK";
 
   private static final String PREFIX_URL = "F:\\img\\";
-
+  //要上传的空间
   private static final String BUCKET = "cisp";
 
   public static String upload(MultipartFile originFile) {
@@ -79,8 +76,21 @@ public class FileUtil {
     return UUID.randomUUID().toString() + "." + type;
   }
 
+  //简单上传，使用默认策略，只需要设置上传的空间名就可以了
   private static String getToken() {
     Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
     return auth.uploadToken(BUCKET);
+  }
+
+  public static String IMAGE_DIR = "F:/upload/";
+  public static String[] IMAGE_FILE_EXTD = new String[] {"png", "bmp", "jpg", "jpeg"};
+
+  public static boolean isFileAllowed(String fileName) {
+    for (String ext : IMAGE_FILE_EXTD) {
+      if (ext.equals(fileName)) {
+        return true;
+      }
+    }
+    return false;
   }
 }

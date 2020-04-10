@@ -18,6 +18,7 @@ public class Article {
   private Integer status;
   private Boolean top;
   private Integer commentCount;
+//  private String imgUrl;
 
   public Integer getId() {
     return id;

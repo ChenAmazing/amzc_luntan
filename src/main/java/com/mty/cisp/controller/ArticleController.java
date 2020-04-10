@@ -6,25 +6,22 @@ import com.mty.cisp.domain.Article;
 import com.mty.cisp.domain.Category;
 import com.mty.cisp.domain.Comment;
 import com.mty.cisp.domain.User;
-import com.mty.cisp.service.ArticleService;
-import com.mty.cisp.service.CategoryService;
-import com.mty.cisp.service.CommentService;
-import com.mty.cisp.service.UserService;
+import com.mty.cisp.service.*;
 import com.mty.cisp.utils.FileUtil;
 import com.mty.cisp.utils.ReturnJson;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Created by mty on 2019-02-15
- */
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
@@ -41,10 +38,16 @@ public class ArticleController {
   @Resource
   UserService userService;
 
+  @Autowired
+  QiniuService qiniuService;
+
+  //上传帖子图片
   @RequestMapping("/uploadImg")
   @ResponseBody
   public ReturnJson upload(HttpServletRequest request, MultipartFile file) {
-    String imgUrl = FileUtil.upload(file);
+    System.out.println("测试上传图片!!!===");
+//    String imgUrl = FileUtil.upload(file);
+    String imgUrl = qiniuService.saveImage(file);
     Map<String, String> imgMap = new HashMap<>();
     imgMap.put("src", imgUrl);
     imgMap.put("title", file.getOriginalFilename());

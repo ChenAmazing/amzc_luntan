@@ -3,9 +3,6 @@ package com.mty.cisp.service;
 import com.mty.cisp.domain.Category;
 import java.util.List;
 
-/**
- * Created by mty on 2019-02-16
- */
 public interface CategoryService {
 
   List<Category> getAllCategory();

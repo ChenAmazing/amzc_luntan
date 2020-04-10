@@ -4,9 +4,6 @@ import com.mty.cisp.domain.Comment;
 import com.mty.cisp.vo.CommentVO;
 import java.util.List;
 
-/**
- * Created by mty on 2019-02-19
- */
 
 public interface CommentService {
 

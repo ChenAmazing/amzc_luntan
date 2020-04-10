@@ -3,6 +3,7 @@ package com.mty.cisp.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mty.cisp.domain.User;
+import com.mty.cisp.service.QiniuService;
 import com.mty.cisp.service.UserService;
 import com.mty.cisp.utils.FileUtil;
 import com.mty.cisp.utils.ReturnJson;
@@ -10,11 +11,13 @@ import com.mty.cisp.utils.ReturnJson;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mty.cisp.utils.UUIDUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,14 +25,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Created by mty on 2019-02-14
- */
 @Controller
 public class UserController {
 
   @Resource
   UserService userService;
+
+  @Autowired
+  QiniuService qiniuService;
 
   @PostMapping("/doRegister")
   @ResponseBody
@@ -106,32 +109,21 @@ public class UserController {
     }
   }
 
+  //设置头像
   @PostMapping("/user/setAvatar")
   @ResponseBody
   public ReturnJson userSetAvatar(HttpServletRequest request, MultipartFile file) {
     try {
-      //获得物理路径webapp所在路径
-      String pathRoot = "F:\\upload\\";
-      String path="";
-      String realpath="";
+      String imgUrl = "";
       if(!file.isEmpty()){
-        //生成uuid作为文件名称
-        String uuid = UUIDUtil.getUUID().toString().replaceAll("-", "");;
-        //获得文件类型（可以判断如果不是图片，禁止上传）
-        String contentType=file.getContentType();
-        //获得文件后缀名称
-        String imageSuffix=contentType.substring(contentType.indexOf("/")+1);
-        path=uuid+"."+imageSuffix;
-        file.transferTo(new File(pathRoot+path));
-        User user = (User) request.getSession().getAttribute("user");
-        user.setAvatar("/upload/"+uuid+"."+imageSuffix);
+        imgUrl = qiniuService.saveImage(file);
+        System.out.println("imgUrl====="+imgUrl);
+        User user = (User)request.getSession().getAttribute("user");
+        user.setAvatar(imgUrl);
         userService.updateUser(user);
-        request.getSession().setAttribute("user", userService.getUserByUsername(user.getUsername()));
-        realpath = "/upload/"+uuid+"."+imageSuffix;
       }
-      System.out.println(path);
       Map<String, String> imgMap = new HashMap<>();
-      imgMap.put("src", realpath);
+      imgMap.put("src",imgUrl);
       imgMap.put("title", file.getOriginalFilename());
       return new ReturnJson("设置成功", imgMap);
     } catch (Exception e) {
