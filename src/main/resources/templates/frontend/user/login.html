@@ -96,7 +96,9 @@
           if (result.msg == '登录成功') {
             layer.msg('登录成功', {
               time: 2000, end: function () {
-                location.href = '/index'
+                // 带参数跳转
+                // location.href = '/index?userId='+result.data
+                    location.href = '/index'
               }
             });
           } else {

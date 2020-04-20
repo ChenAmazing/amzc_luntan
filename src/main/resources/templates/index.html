@@ -25,13 +25,12 @@
         <li class="layui-nav-item">
           <a class="fly-nav-avatar" href="javascript:;">
             <cite class="layui-hide-xs">${user.nickname}</cite>
-            <img
-              src="${user.avatar!}">
+            <img src="${user.avatar!}">
           </a>
           <dl class="layui-nav-child">
             <dd><a href="/user/set"><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
-            <dd><a href="/user/${user.id}"><i class="layui-icon"
-                                              style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
+            <dd>
+              <a href="/user/${user.id}"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a>
             </dd>
             <hr style="margin: 5px 0;">
             <dd><a href="/logout" style="text-align: center;">退出</a></dd>
@@ -57,13 +56,15 @@
   <div class="layui-container">
     <ul class="layui-clear">
       <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
-      <#if Session['user']?exists>
-        <li><a href="/user/${user.id}">个人中心</a></li>
-        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span
-            class="fly-mid"></span></li>
 
+      <#if Session['user']?exists>
+
+        <li><a href="/user/${user.id}">个人中心</a></li>
+        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
+          <span class="fly-mid"></span></li>
         <!-- 用户登入后显示 -->
         <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/center">我发布的信息</a>
+        <li><a href="/user/message">消息</a></li>
         </li>
       </#if>
     </ul>
@@ -245,54 +246,69 @@
     <p>某某动漫贴吧平台 &nbsp;&nbsp; Copyright&nbsp; &copy; 2020 amzc</p>
   </div>
 
-  <script src="/static/res/layui/layui.js"></script>
-  <script>
+<script src="/static/res/layui/layui.js"></script>
+<script>
     layui.use(['jquery', 'layer', 'form', 'laypage'], function () {
-      var layer = layui.layer
-          , form = layui.form
-          , $ = layui.jquery
-          , laypage = layui.laypage;
-      laypage.render({
-        elem: 'page'
-        , count: ${articleCount} //数据总数
-        , theme: '#1E9FFF'
-        , curr: ${page!'1'}
-        , jump: function (obj, first) {
-          layer.msg('第 ' + obj.curr + ' 页');
-          if (!first) {
-            layer.msg('第 ' + obj.curr + ' 页');
-            window.location = "/index?page=" + obj.curr
-          }
-        }
-      });
-
-      form.on('select(selectCategory)', function (data) {
-        var categoryId = $('#selc option:selected').val();
-        window.location = "/index?cId=" + categoryId
-      });
-
-      form.on("submit(search)", function (data) {
-        $.ajax({
-          url: '/search?search' + data
-          , type: 'get'
-          , contentType: 'application/json'
-          , data: JSON.stringify(data.field)
-          , success: function (result) {
-            window.location.reload();
-          }
+        var layer = layui.layer
+            , form = layui.form
+            , $ = layui.jquery
+            , laypage = layui.laypage;
+        laypage.render({
+            elem: 'page'
+            , count: ${articleCount} //数据总数
+            , theme: '#1E9FFF'
+            , curr: ${page!'1'}
+            , jump: function (obj, first) {
+                layer.msg('第 ' + obj.curr + ' 页');
+                if (!first) {
+                    layer.msg('第 ' + obj.curr + ' 页');
+                    window.location = "/index?page=" + obj.curr
+                }
+            }
         });
-      });
+
+        form.on('select(selectCategory)', function (data) {
+            var categoryId = $('#selc option:selected').val();
+            window.location = "/index?cId=" + categoryId
+        });
+
+        form.on("submit(search)", function (data) {
+            $.ajax({
+                url: '/search?search' + data
+                , type: 'get'
+                , contentType: 'application/json'
+                , data: JSON.stringify(data.field)
+                , success: function (result) {
+                    window.location.reload();
+                }
+            });
+        });
 
     });
     layui.config({
-      version: "3.0.0"
-      , base: '/static/res/mods/'
+        version: "3.0.0"
+        , base: '/static/res/mods/'
     }).extend({
-      fly: 'index'
+        fly: 'index'
     }).use('fly');
-  </script>
 
-  <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol)
+    // GetRequest();
+    // function GetRequest() {
+    //     var url = location.search; //获取url中"?"符后的字串
+    //     var theRequest = new Object();
+    //     if (url.indexOf("?") != -1) {
+    //         var str = url.substr(1);
+    //         strs = str.split("&");
+    //         for(var i = 0; i < strs.length; i ++) {
+    //             theRequest[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+    //         }
+    //     }
+    //     return theRequest;
+    // }
+    // var getUserId = GetRequest().userId;
+</script>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol)
         ? " https://" : " http://");
     document.write(unescape(
         "%3Cspan id='cnzz_stat_icon_30088308'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol

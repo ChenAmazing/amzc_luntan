@@ -34,6 +34,8 @@ public class UserController {
   @Autowired
   QiniuService qiniuService;
 
+  Map<String,User> userMap = new HashMap<String,User>();
+
   @PostMapping("/doRegister")
   @ResponseBody
   public ReturnJson doRegister(@RequestBody User user) {
@@ -58,8 +60,10 @@ public class UserController {
   @ResponseBody
   public ReturnJson doLogin(HttpServletRequest request, @RequestBody User user) {
     User newUser = userService.loginCheck(user);
+//    userMap.put(newUser.getId().toString(),newUser);
     if (newUser != null) {
       request.getSession().setAttribute("user", newUser);
+//      request.getSession().setAttribute("user",userMap);
       if ("管理员".equals(newUser.getType())) {
         request.getSession().setAttribute("adminUser", newUser);
       }

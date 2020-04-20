@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,9 @@ public class ArticleController {
 
   @Autowired
   QiniuService qiniuService;
+
+  @Autowired
+  NotifyService notifyService;
 
   //上传帖子图片
   @RequestMapping("/uploadImg")
@@ -133,6 +137,7 @@ public class ArticleController {
         return new ReturnJson(1, "您被禁言，无法发表评论!");
       }
       commentService.create(comment);
+
       return new ReturnJson("评论成功");
     } catch (Exception e) {
       return new ReturnJson(1, "评论失败");
@@ -176,5 +181,15 @@ public class ArticleController {
     }
   }
 
-
+  @RequestMapping(value = "/changeIsReaded",method = {RequestMethod.POST})
+  @ResponseBody
+  public ReturnJson changeIsReaded(@RequestBody int id){
+    System.out.println(id);
+    int result = notifyService.changeIsReaded(id);
+    if(result == 1){
+      return new ReturnJson("success");
+    }else{
+      return new ReturnJson("error");
+    }
+  }
 }

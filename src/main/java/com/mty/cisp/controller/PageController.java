@@ -4,11 +4,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.mty.cisp.domain.Article;
 import com.mty.cisp.domain.Category;
+import com.mty.cisp.domain.Notify;
 import com.mty.cisp.domain.User;
-import com.mty.cisp.service.ArticleService;
-import com.mty.cisp.service.CategoryService;
-import com.mty.cisp.service.CommentService;
-import com.mty.cisp.service.UserService;
+import com.mty.cisp.service.*;
 import com.mty.cisp.vo.ArticleVO;
 import com.mty.cisp.vo.CommentVO;
 import java.util.Comparator;
@@ -16,6 +14,9 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.mty.cisp.vo.NotifyVO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,9 @@ public class PageController {
 
   @Resource
   CommentService commentService;
+
+  @Autowired
+  NotifyService notifyService;
 
   @RequestMapping("/")
   public void test(HttpServletResponse response) throws Exception {
@@ -181,6 +185,8 @@ public class PageController {
     for (ArticleVO articleVO : myArticles) {
       articleVO.setCommentCount(commentService.getCommentByArticleId(articleVO.getId()).size());
     }
+    List<Notify> notifies = notifyService.getNotify(user.getId());
+    request.getSession().setAttribute("notifies",notifies);
     request.getSession().setAttribute("myArticles", myArticles);
     return "frontend/user/center";
   }
