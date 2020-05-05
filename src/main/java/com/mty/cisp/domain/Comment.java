@@ -51,4 +51,15 @@ public class Comment {
   public void setCreateTime(String createTime) {
     this.createTime = createTime;
   }
+
+  @Override
+  public String toString() {
+    return "Comment{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", articleId=" + articleId +
+            ", content='" + content + '\'' +
+            ", createTime='" + createTime + '\'' +
+            '}';
+  }
 }

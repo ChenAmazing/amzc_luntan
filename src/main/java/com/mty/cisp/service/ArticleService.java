@@ -36,4 +36,6 @@ public interface ArticleService {
     String keyword);
 
   List<Article> getHotArticles();
+
+  int getToUserIdByArticleId(Integer articleId);
 }

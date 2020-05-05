@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
   <meta charset="utf-8">
   <title>某某动漫贴吧平台</title>
@@ -64,7 +64,6 @@
           <span class="fly-mid"></span></li>
         <!-- 用户登入后显示 -->
         <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/center">我发布的信息</a>
-        <li><a href="/user/message">消息</a></li>
         </li>
       </#if>
     </ul>
@@ -247,6 +246,8 @@
   </div>
 
 <script src="/static/res/layui/layui.js"></script>
+<script type="text/javascript" src="../static/js/chatroom.js"></script>
+<script type="text/javascript" src="../static/js/common/jquery-1.9.1.min.js"></script>
 <script>
     layui.use(['jquery', 'layer', 'form', 'laypage'], function () {
         var layer = layui.layer
@@ -283,7 +284,6 @@
                 }
             });
         });
-
     });
     layui.config({
         version: "3.0.0"

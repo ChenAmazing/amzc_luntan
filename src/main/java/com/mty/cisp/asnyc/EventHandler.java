@@ -1,4 +1,8 @@
 package com.mty.cisp.asnyc;
 
-public class EventHandler {
+import java.util.List;
+
+public interface EventHandler {
+    void doHandle(EventModel model);
+    List<EventType> getSupportEventTypes();
 }

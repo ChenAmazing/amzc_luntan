@@ -111,4 +111,8 @@
     update article set comment_count = comment_count - 1
     where id = #{id}
   </update>
+
+  <select id="getToUserIdByArticleId" parameterType="int" resultType="int">
+    select user_id from article where id = #{articleId}
+  </select>
 </mapper>

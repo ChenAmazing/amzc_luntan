@@ -16,4 +16,18 @@ public class Notify {
     public String toUsername;
     public int articleId;
 
+    public Notify(int userId, int toUserId, String type, int isReaded, String content, String time, String username, String toUsername, int articleId) {
+        this.userId = userId;
+        this.toUserId = toUserId;
+        this.type = type;
+        this.isReaded = isReaded;
+        this.content = content;
+        this.time = time;
+        this.username = username;
+        this.toUsername = toUsername;
+        this.articleId = articleId;
+    }
+
+    public Notify(){
+    }
 }

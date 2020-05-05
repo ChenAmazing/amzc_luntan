@@ -66,7 +66,12 @@
 
   <!--<p class="fly-home-sign" style="color: #01AAED">个性签名：${userInfo.signature!'这个人有点懒，什么都没有留下'}</p>-->
   <p class="fly-home-sign" style="color: #01AAED">个性签名：${userInfo.signature!}</p>
-
+  <#if user.id != userInfo.id>
+  <div class="fly-sns" data-user="">
+    <a href="javascript:;" id="addF" class="layui-btn layui-btn-primary fly-imActive" data-type="addFriend" onclick="addFriend(${userInfo.id})">加为好友</a>
+    <a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" data-type="chat">发起会话</a>
+  </div>
+  </#if>
 </div>
 
 <div class="layui-container">
@@ -107,6 +112,19 @@
   }).extend({
     fly: 'index'
   }).use('fly');
+  function addFriend(data) {
+      var $ = layui.jquery;
+      $.ajax({
+          url: "/user/addFriend",
+          type: "post",
+          data: JSON.stringify(data),
+          dataType: "json",
+          contentType: 'application/json',
+          success: function (result) {
+              console.log("addFriend success!!!")
+          }
+      })
+  }
 </script>
 
 </body>

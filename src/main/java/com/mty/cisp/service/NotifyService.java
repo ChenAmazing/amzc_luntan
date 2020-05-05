@@ -2,7 +2,6 @@ package com.mty.cisp.service;
 
 import com.mty.cisp.dao.NotifyDao;
 import com.mty.cisp.domain.Notify;
-import com.mty.cisp.vo.NotifyVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +21,9 @@ public class NotifyService {
 
     public int changeIsReaded(int id){
         return notifyDao.updateIsReaded(id);
+    }
+
+    public int addNotify(Notify notify){
+        return notifyDao.addNotify(notify);
     }
 }

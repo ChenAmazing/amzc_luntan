@@ -100,4 +100,9 @@ public class ArticleServiceImpl implements ArticleService {
     Date startDate = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
     return articleMapper.getHotArticles(startDate, endDate);
   }
+
+  @Override
+  public int getToUserIdByArticleId(Integer articleId) {
+    return articleMapper.getToUserIdByArticleId(articleId);
+  }
 }

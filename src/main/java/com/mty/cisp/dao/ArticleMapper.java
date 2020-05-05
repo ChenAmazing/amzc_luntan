@@ -47,4 +47,6 @@ public interface ArticleMapper {
   void addComment(Integer id);
 
   void deleteComment(Integer id);
+
+  int getToUserIdByArticleId(Integer articleId);
 }

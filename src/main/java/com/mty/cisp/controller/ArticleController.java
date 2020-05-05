@@ -2,6 +2,9 @@ package com.mty.cisp.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.mty.cisp.asnyc.EventModel;
+import com.mty.cisp.asnyc.EventProduct;
+import com.mty.cisp.asnyc.EventType;
 import com.mty.cisp.domain.Article;
 import com.mty.cisp.domain.Category;
 import com.mty.cisp.domain.Comment;
@@ -44,6 +47,9 @@ public class ArticleController {
 
   @Autowired
   NotifyService notifyService;
+
+  @Autowired
+  EventProduct eventProduct;
 
   //上传帖子图片
   @RequestMapping("/uploadImg")
@@ -137,7 +143,8 @@ public class ArticleController {
         return new ReturnJson(1, "您被禁言，无法发表评论!");
       }
       commentService.create(comment);
-
+      System.out.println(JSONObject.toJSONString(comment));
+      eventProduct.fireModel(new EventModel(EventType.comment).setObjectStr(JSONObject.toJSONString(comment)));
       return new ReturnJson("评论成功");
     } catch (Exception e) {
       return new ReturnJson(1, "评论失败");

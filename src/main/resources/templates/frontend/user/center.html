@@ -73,6 +73,12 @@
         基本设置
       </a>
     </li>
+    <li class="layui-nav-item">
+      <a href="/chatchat">
+        <i class="layui-icon">&#xe620;</i>
+        好友私信
+      </a>
+    </li>
   </ul>
 
   <div class="site-tree-mobile layui-hide">
@@ -114,10 +120,49 @@
     <!--</div>-->
     <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
       <ul class="layui-tab-title">
-        <li class="layui-this">我发布的帖子</li>
-        <li>消息通知</li>
+        <li class="layui-this">消息通知</li>
+        <li>我发布的帖子</li>
       </ul>
       <div class="layui-tab-content" style="padding: 20px 0;">
+        <!--消息通知-->
+        <div class="layui-tab-item layui-show">
+          <ul class="mine-view jie-row">
+            <#if notifies??>
+              <#list notifies as notify>
+              <#if notify.type == "评论">
+                <li style="height: 28px;">
+                  <a class="jie-title" href="/article/${notify.articleId}" onclick="changeStatus(${notify.id})" target="_blank" style="font-size: 14px; margin-top: 5px">{${notify.username}}评论了你的帖子：${notify.content}</a>
+                  <#if notify.isReaded == 0>
+                    <i id="unreaded" style="font-size: 14px;margin-top: 5px; color:lawngreen">未读</i>
+                    <i id="readed"   style="font-size: 14px;display: none">已读</i>
+                  </#if>
+                  <#if notify.isReaded == 1>
+                    <i style="font-size: 14px;margin-top: 5px;">已读</i>
+                  </#if>
+                  <em style="font-size: 14px;margin-top: 5px">${notify.time}</em>
+                </li>
+            </#if>
+            <#if notify.type == "公告">
+              <li style="height: 28px;">
+                <a class="jie-title" href="/article/${notify.articleId}" target="_blank" style="font-size: 14px;margin-top: 5px">发布了公告：${notify.content}</a>
+                <#if notify.isReaded == 0>
+                  <i style="font-size: 14px;margin-top: 5px; color:lawngreen">未读</i>
+                </#if>
+                <#if notify.isReaded == 1>
+                  <i style="font-size: 14px;margin-top: 5px;">已读</i>
+                </#if>
+                <em style="font-size: 14px;margin-top: 5px">${notify.time}</em>
+              </li>
+            </#if>
+            </#list>
+          <#else>
+            暂无数据
+          </#if>
+        </ul>
+        <div id="LAY_page2"></div>
+      </div>
+
+      <!--我发布的帖子-->
         <div class="layui-tab-item">
           <ul class="mine-view jie-row">
             <#if myArticles??>
@@ -134,43 +179,6 @@
           </ul>
           <div id="LAY_page"></div>
         </div>
-        <!--消息通知-->
-        <div class="layui-tab-item layui-show">
-          <ul class="mine-view jie-row">
-            <#if notifies??>
-            <#list notifies as notify>
-            <#if notify.type == "评论">
-            <li style="height: 28px;">
-              <a class="jie-title" href="/article/${notify.articleId}" onclick="changeStatus(${notify.id})" target="_blank" style="font-size: 14px; margin-top: 5px">{${notify.username}}评论了你的帖子：${notify.content}</a>
-              <#if notify.isReaded == 0>
-              <i id="unreaded" style="font-size: 14px;margin-top: 5px; color:lawngreen">未读</i>
-              <i id="readed"   style="font-size: 14px;display: none">已读</i>
-              </#if>
-              <#if notify.isReaded == 1>
-              <i style="font-size: 14px;margin-top: 5px;">已读</i>
-              </#if>
-              <em style="font-size: 14px;margin-top: 5px">${notify.time}</em>
-            </li>
-            </#if>
-            <#if notify.type == "公告">
-            <li style="height: 28px;">
-              <a class="jie-title" href="/article/${notify.articleId}" target="_blank" style="font-size: 14px;margin-top: 5px">发布了公告：${notify.content}</a>
-              <#if notify.isReaded == 0>
-              <i style="font-size: 14px;margin-top: 5px; color:lawngreen">未读</i>
-              </#if>
-              <#if notify.isReaded == 1>
-              <i style="font-size: 14px;margin-top: 5px;">已读</i>
-              </#if>
-              <em style="font-size: 14px;margin-top: 5px">${notify.time}</em>
-            </li>
-        </#if>
-          </#list>
-          <#else>
-          暂无数据
-        </#if>
-          </ul>
-        <div id="LAY_page2"></div>
-      </div>
 
     </div>
     </div>
