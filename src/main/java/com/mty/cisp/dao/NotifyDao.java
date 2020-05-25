@@ -19,4 +19,7 @@ public interface NotifyDao {
 
     @Insert({"insert into", TABLE_NAME, "(", INSERT_FIEIDS, ") values (#{userId},#{toUserId},#{type},#{isReaded},#{content},now(),#{username},#{toUsername},#{articleId})" })
     int addNotify(Notify notify);
+
+    @Select({"select",SELECT_FIEIDS," from ",TABLE_NAME,"where type = #{type} order by time desc limit 2"})
+    List<Notify> getPublic(String type);
 }

@@ -103,10 +103,26 @@
     <!--</tr>-->
     <!--</tbody>-->
   <!--</table>-->
-
+  <div>
+    <p></p>
+    <br>
+  </div>
   <blockquote class="layui-elem-quote">
-    更新日志
+    发布公告
   </blockquote>
+  <div>
+    <form id="form" class="layui-form">
+      <div class="layui-form-item">
+          <input type="text" name="name" lay-verify="required"
+                 placeholder="发布公告" autocomplete="off" class="layui-input ">
+      </div>
+        <button class="layui-btn" lay-submit="" lay-filter="publicAdd">立即发布</button>
+        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+
+      <!--<input type="hidden" id="house" name="id"-->
+             <!--autocomplete="off" class="layui-input" >-->
+    </form>
+  </div>
   <!--<ul class="layui-timeline">-->
     <!--<li class="layui-timeline-item">-->
       <!--<i class="layui-icon layui-timeline-axis">&#xe63f;</i>-->
@@ -228,6 +244,30 @@
     "hash": "91ff44d1248d72fc847c6177474e1533"
   });
   tpwidget("show");
+  layui.use(['jquery', 'form', 'layer'], function () {
+      var $ = layui.jquery,
+          form = layui.form,
+          layer = layui.layer;
+      //监听提交
+      form.on('submit(publicAdd)', function (data) {
+          $.ajax({
+              url: '/article/publicAdd'
+              , type: 'post'
+              , contentType: 'application/json'
+              , data: JSON.stringify(data.field.name)
+              , dataType: "json"
+              , success: function (result) {
+                  if (result.code == 0) {
+                      layer.msg(result.msg);
+                      setTimeout('window.parent.location.reload()', 2000);
+                  }else {
+                      layer.msg(result.msg);
+                  }
+              }
+          });
+          return false;
+      });
+  });
 </script>
 </body>
 </html>

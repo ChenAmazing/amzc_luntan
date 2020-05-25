@@ -521,8 +521,8 @@ function setUserInfo() {
 				// 2. 手动计算、调整回显消息的宽度
 				var $newsDiv = $('.newsList li').last().children("div").first();
 				var fixWidth = 300; // 自定义的消息框本身的最长宽度
-				var maxWidth = 493; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
-				var minMarginLeftWidth = 224; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
+				var maxWidth = 634; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
+				var minMarginLeftWidth = 364; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
 				var marginLeftWidth; // 要计算消息框的margin-left宽度
 				if ($newsDiv.actual('width') < fixWidth) {
 					marginLeftWidth = maxWidth - $newsDiv.actual('width');;
@@ -573,8 +573,8 @@ function setUserInfo() {
 		        // 3. 利用暂存区手动计算、调整新消息的宽度；
 		        var $answersDiv = $('.newsList-temp li').last().children("div").first();
 		        var fixWidth = 300; // 消息框本身的最长宽度
-		        var maxWidth = 480; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
-		        var minMarginRightWidth = 212; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
+		        var maxWidth = 634; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
+		        var minMarginRightWidth = 366; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
 		        var marginRightWidth; // 要计算消息框的margin-right宽度
 		        if ($answersDiv.actual('width') < fixWidth) {
 		            marginRightWidth = maxWidth - $answersDiv.actual('width');
@@ -599,48 +599,6 @@ function setUserInfo() {
 		        
 		        // 5. 滚动条滑到底
 		        $('.RightCont').scrollTop($('.RightCont')[0].scrollHeight );
-			},
-			
-			receiveGroupMsg: function(msg, toGroupId) {
-				// 1. 设置消息框可见
-				$('.conRight').css("display", "-webkit-box"); 
-				
-				// 2. 把新消息放到暂存区$('.newsList-temp)，如果用户正处于与发出新消息的用户的消息框，则消息要回显
-				$('.newsList-temp').append(msg);
-	            var $focusGroupId = $(".conLeft .bg").find('span.hidden-groupId');
-	            if ($focusGroupId.length > 0 && $focusGroupId.html() == toGroupId) {
-	                $('.newsList').append(msg);  
-	            }
-	            
-	            // 3. 手动计算、调整回显消息的宽度
-	            var $answersDiv = $('.newsList-temp li').last().children("div").first();
-	            var fixWidth = 300; // 消息框本身的最长宽度
-	            var maxWidth = 480; // 消息框所在行(div)的满宽度(不包含头像框的宽度部分)
-	            var minMarginRightWidth = 212; // 按理说应该是 maxwidth - fixWidth，这里出现了点问题
-	            var marginRightWidth; // 要计算消息框的margin-right宽度
-	            if ($answersDiv.actual('width') < fixWidth) {
-	                marginRightWidth = maxWidth - $answersDiv.actual('width');
-	                $answersDiv.css("margin-right", marginRightWidth + "px");
-	                if ($focusGroupId.length > 0 && $focusGroupId.html() == toGroupId) {
-	                    $('.newsList li').last().children("div").first()
-	                        .css("margin-right", marginRightWidth + "px");
-	                }
-	            } else {
-	                $answersDiv.css("width", fixWidth + "px")
-	                           .css("margin-right", minMarginRightWidth + "px");
-	                if ($focusGroupId.length > 0 && $focusGroupId.html() == toGroupId) {
-	                    $('.newsList li').last().children("div").first()
-	                        .css("width", fixWidth + "px")
-	                        .css("margin-right", minMarginRightWidth + "px");
-	                }
-	            }
-	            
-	            // 4. 把 调整后的消息html标签字符串 添加到已发送用户消息表，并清空暂存区
-	            sentMessageMap.get(toGroupId).push($('.newsList-temp li').last().prop("outerHTML"));
-	            $('.newsList-temp').empty();
-	            
-	            // 5. 滚动条滑到底
-	            $('.RightCont').scrollTop($('.RightCont')[0].scrollHeight);
 			}
 	}
 	

@@ -88,12 +88,14 @@ public class PageController {
     if (topArticleList.size() > 0) {
       request.setAttribute("topArticleList", topArticleList);
     }
+    List<Notify> publicList = notifyService.getPublic();
     request.setAttribute("cId", cId);
     request.setAttribute("order", order);
     request.setAttribute("page", page);
     request.setAttribute("articleList", articleList);
     request.setAttribute("articleCount", count);
     request.setAttribute("hotArticles", hotArticles);
+    request.setAttribute("publicList",publicList);
     return "index";
   }
 
@@ -185,8 +187,10 @@ public class PageController {
       articleVO.setCommentCount(commentService.getCommentByArticleId(articleVO.getId()).size());
     }
     List<Notify> notifies = notifyService.getNotify(user.getId());
+    List<Notify> publicNotifies = notifyService.getPublic();
     request.getSession().setAttribute("notifies",notifies);
     request.getSession().setAttribute("myArticles", myArticles);
+    request.getSession().setAttribute("publicNotifies", publicNotifies);
     return "frontend/user/center";
   }
 
@@ -259,7 +263,7 @@ public class PageController {
     return "/backend/user/add";
   }
 
-  @RequestMapping("/admin/articarticle/edit")
+  @RequestMapping("/admin/article/edit")
   public String articleAdd(HttpServletRequest request,
     @RequestParam(required = false) Integer articleId) {
     List<Category> list = categoryService.getAllCategory();
@@ -270,5 +274,4 @@ public class PageController {
     }
     return "/backend/article/article-edit";
   }
-
 }

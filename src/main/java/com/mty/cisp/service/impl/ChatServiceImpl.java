@@ -1,7 +1,6 @@
 package com.mty.cisp.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.mty.cisp.dao.GroupInfoDao;
 import com.mty.cisp.model.po.GroupInfo;
 import com.mty.cisp.model.vo.ResponseJson;
 import com.mty.cisp.service.ChatService;
@@ -16,17 +15,19 @@ import org.springframework.stereotype.Service;
 
 
 import java.text.MessageFormat;
-import java.util.Iterator;
+import java.util.*;
 import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ChatServiceImpl implements ChatService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatServiceImpl.class);
             
-    @Autowired
-    private GroupInfoDao groupDao;
-    
+//    @Autowired
+//    private GroupInfoDao groupDao;
+    public ConcurrentHashMap<String,ConcurrentHashMap<String,List<String>>> chatMaps = new ConcurrentHashMap<>();
+
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
         String userId = (String)param.get("userId");
@@ -37,6 +38,24 @@ public class ChatServiceImpl implements ChatService {
         sendMessage(ctx, responseJson);
         LOGGER.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , userId, Constant.onlineUserMap.size()));
+        ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(userId);
+
+        if(chatMaps.get(userId) != null){
+            ConcurrentHashMap<String, List<String>> tempMap = chatMaps.get(userId);
+            for(Map.Entry<String, List<String>> tempMapItem : tempMap.entrySet()){
+                String fromUserId = tempMapItem.getKey();
+                List<String> list = tempMapItem.getValue();
+                for(String content : list){
+                    String response = new ResponseJson().success()
+                            .setData("fromUserId", fromUserId)
+                            .setData("content", content)
+                            .setData("type", ChatType.SINGLE_SENDING)
+                            .toString();
+                    sendMessage(toUserCtx, response);
+                }
+            }
+        }
+        chatMaps.remove(userId);
     }
 
     @Override
@@ -46,10 +65,19 @@ public class ChatServiceImpl implements ChatService {
         String content = (String)param.get("content");
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
         if (toUserCtx == null) {
-            String responseJson = new ResponseJson()
-                    .error(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId))
-                    .toString();
-            sendMessage(ctx, responseJson);
+//            String responseJson = new ResponseJson()
+//                    .error(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId))
+//                    .toString();
+//            sendMessage(ctx, responseJson);
+            if(chatMaps.get(toUserId)==null){
+                ConcurrentHashMap<String, List<String>> tempMap = new ConcurrentHashMap<>();
+                chatMaps.put(toUserId,tempMap);
+                ArrayList<String> chatcontents  = new ArrayList<>();
+                chatcontents.add(content);
+                chatMaps.get(toUserId).put(fromUserId,chatcontents);
+            }else{
+                chatMaps.get(toUserId).get(fromUserId).add(content);
+            }
         } else {
             String responseJson = new ResponseJson().success()
                     .setData("fromUserId", fromUserId)
@@ -60,46 +88,46 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    @Override
-    public void groupSend(JSONObject param, ChannelHandlerContext ctx) {
-        
-        String fromUserId = (String)param.get("fromUserId");
-        String toGroupId = (String)param.get("toGroupId");
-        String content = (String)param.get("content");
-        
-        /*String userId = (String)param.get("userId");
-        String fromUsername = (String)param.get("fromUsername");*/
-        /*String responseJson = new ResponseJson().success()
-                .setData("fromUsername", fromUsername)
-                .setData("content", content)
-                .setData("type", ChatType.GROUP_SENDING)
-                .toString();*/
-        /*Set<Entry<String, ChannelHandlerContext>> userCtxs = Constant.onlineUserMap.entrySet();
-        for (Entry<String, ChannelHandlerContext> userCtx : userCtxs) {
-            if (!userCtx.getKey().equals(userId)) {
-                sendMessage(userCtx.getValue(), responseJson);
-            }
-        }*/
-        GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
-        if (groupInfo == null) {
-            String responseJson = new ResponseJson().error("该群id不存在").toString();
-            sendMessage(ctx, responseJson);
-        } else {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("content", content)
-                    .setData("toGroupId", toGroupId)
-                    .setData("type", ChatType.GROUP_SENDING)
-                    .toString();
-            groupInfo.getMembers().stream()
-                .forEach(member -> { 
-                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
-                    if (toCtx != null && !member.getUserId().equals(fromUserId)) {
-                        sendMessage(toCtx, responseJson);
-                    }
-                });
-        }
-    }
+//    @Override
+//    public void groupSend(JSONObject param, ChannelHandlerContext ctx) {
+//
+//        String fromUserId = (String)param.get("fromUserId");
+//        String toGroupId = (String)param.get("toGroupId");
+//        String content = (String)param.get("content");
+//
+//        /*String userId = (String)param.get("userId");
+//        String fromUsername = (String)param.get("fromUsername");*/
+//        /*String responseJson = new ResponseJson().success()
+//                .setData("fromUsername", fromUsername)
+//                .setData("content", content)
+//                .setData("type", ChatType.GROUP_SENDING)
+//                .toString();*/
+//        /*Set<Entry<String, ChannelHandlerContext>> userCtxs = Constant.onlineUserMap.entrySet();
+//        for (Entry<String, ChannelHandlerContext> userCtx : userCtxs) {
+//            if (!userCtx.getKey().equals(userId)) {
+//                sendMessage(userCtx.getValue(), responseJson);
+//            }
+//        }*/
+//        GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
+//        if (groupInfo == null) {
+//            String responseJson = new ResponseJson().error("该群id不存在").toString();
+//            sendMessage(ctx, responseJson);
+//        } else {
+//            String responseJson = new ResponseJson().success()
+//                    .setData("fromUserId", fromUserId)
+//                    .setData("content", content)
+//                    .setData("toGroupId", toGroupId)
+//                    .setData("type", ChatType.GROUP_SENDING)
+//                    .toString();
+//            groupInfo.getMembers().stream()
+//                .forEach(member -> {
+//                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
+//                    if (toCtx != null && !member.getUserId().equals(fromUserId)) {
+//                        sendMessage(toCtx, responseJson);
+//                    }
+//                });
+//        }
+//    }
     
     @Override
     public void remove(ChannelHandlerContext ctx) {
@@ -145,35 +173,35 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-    @Override
-    public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = (String)param.get("fromUserId");
-        String toGroupId = (String)param.get("toGroupId");
-        String originalFilename = (String)param.get("originalFilename");
-        String fileSize = (String)param.get("fileSize");
-        String fileUrl = (String)param.get("fileUrl");
-        GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
-        if (groupInfo == null) {
-            String responseJson = new ResponseJson().error("该群id不存在").toString();
-            sendMessage(ctx, responseJson);
-        } else {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("toGroupId", toGroupId)
-                    .setData("originalFilename", originalFilename)
-                    .setData("fileSize", fileSize)
-                    .setData("fileUrl", fileUrl)
-                    .setData("type", ChatType.FILE_MSG_GROUP_SENDING)
-                    .toString();
-            groupInfo.getMembers().stream()
-                .forEach(member -> { 
-                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
-                    if (toCtx != null && !member.getUserId().equals(fromUserId)) {
-                        sendMessage(toCtx, responseJson);
-                    }
-                });
-        }
-    }
+//    @Override
+//    public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx) {
+//        String fromUserId = (String)param.get("fromUserId");
+//        String toGroupId = (String)param.get("toGroupId");
+//        String originalFilename = (String)param.get("originalFilename");
+//        String fileSize = (String)param.get("fileSize");
+//        String fileUrl = (String)param.get("fileUrl");
+//        GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
+//        if (groupInfo == null) {
+//            String responseJson = new ResponseJson().error("该群id不存在").toString();
+//            sendMessage(ctx, responseJson);
+//        } else {
+//            String responseJson = new ResponseJson().success()
+//                    .setData("fromUserId", fromUserId)
+//                    .setData("toGroupId", toGroupId)
+//                    .setData("originalFilename", originalFilename)
+//                    .setData("fileSize", fileSize)
+//                    .setData("fileUrl", fileUrl)
+//                    .setData("type", ChatType.FILE_MSG_GROUP_SENDING)
+//                    .toString();
+//            groupInfo.getMembers().stream()
+//                .forEach(member -> {
+//                    ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
+//                    if (toCtx != null && !member.getUserId().equals(fromUserId)) {
+//                        sendMessage(toCtx, responseJson);
+//                    }
+//                });
+//        }
+//    }
     
     @Override
     public void typeError(ChannelHandlerContext ctx) {

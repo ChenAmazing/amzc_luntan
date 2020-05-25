@@ -9,6 +9,7 @@ import java.util.List;
 
 @Service
 public class NotifyService {
+    final String TYPE_PUBLIC = "公告";
 
     @Autowired
     NotifyDao notifyDao;
@@ -25,5 +26,9 @@ public class NotifyService {
 
     public int addNotify(Notify notify){
         return notifyDao.addNotify(notify);
+    }
+
+    public List<Notify> getPublic(){
+        return notifyDao.getPublic(TYPE_PUBLIC);
     }
 }

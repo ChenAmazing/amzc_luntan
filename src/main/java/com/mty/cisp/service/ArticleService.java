@@ -38,4 +38,6 @@ public interface ArticleService {
   List<Article> getHotArticles();
 
   int getToUserIdByArticleId(Integer articleId);
+
+  String getTitleByArticleId(Integer articleId);
 }

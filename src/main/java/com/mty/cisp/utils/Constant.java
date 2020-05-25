@@ -1,11 +1,8 @@
 package com.mty.cisp.utils;
 
-import com.mty.cisp.model.po.GroupInfo;
-import com.mty.cisp.model.po.UserInfo;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,14 +22,8 @@ public class Constant {
     public static final String USER_TOKEN = "userId";
     
     public static Map<String, WebSocketServerHandshaker> webSocketHandshakerMap =
-            new ConcurrentHashMap<String, WebSocketServerHandshaker>();
+            new ConcurrentHashMap<>();
     
 	public static Map<String, ChannelHandlerContext> onlineUserMap =
-	        new ConcurrentHashMap<String, ChannelHandlerContext>();
-
-	public static Map<String, GroupInfo> groupInfoMap =
-	        new ConcurrentHashMap<String, GroupInfo>();
-	
-	public static Map<String, UserInfo> userInfoMap =
-	        new HashMap<String, UserInfo>();
+	        new ConcurrentHashMap<>();
 }

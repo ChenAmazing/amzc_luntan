@@ -3,7 +3,7 @@ package com.mty.cisp.service.impl;
 import com.mty.cisp.dao.UserMapper;
 import com.mty.cisp.domain.User;
 import com.mty.cisp.service.UserService;
-import com.mty.cisp.utils.PasswordUtil;
+//import com.mty.cisp.utils.PasswordUtil;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Service;

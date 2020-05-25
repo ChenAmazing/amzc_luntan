@@ -49,4 +49,6 @@ public interface ArticleMapper {
   void deleteComment(Integer id);
 
   int getToUserIdByArticleId(Integer articleId);
+
+  String getTitleByArticleId(Integer articleId);
 }

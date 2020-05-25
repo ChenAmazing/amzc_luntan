@@ -94,6 +94,9 @@
     <if test="keyword != null and keyword != ''">
       and title like CONCAT('%',#{keyword},'%')
     </if>
+    <if test="keyword != null and keyword != ''">
+      or content like CONCAT('%',#{keyword},'%')
+    </if>
     order by article.create_time desc;
   </select>
 
@@ -114,5 +117,9 @@
 
   <select id="getToUserIdByArticleId" parameterType="int" resultType="int">
     select user_id from article where id = #{articleId}
+  </select>
+
+  <select id = 'getTitleByArticleId' parameterType="int" resultType="String">
+    select title from article where id = #{articleId}
   </select>
 </mapper>

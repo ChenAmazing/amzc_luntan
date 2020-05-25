@@ -49,6 +49,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                 while(true){
                     String key = RedisKeyUtil.getEventQueueKey();
                     if (jedisAdapter.exists(key)) {
+                        //brpop阻塞时，exists(key)不存在
                         List<String> messages = jedisAdapter.brpop(0, key);
                         // 第一个元素是队列名字
                         for (String message : messages) {

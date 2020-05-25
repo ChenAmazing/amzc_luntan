@@ -9,11 +9,11 @@ public interface ChatService {
     
     public void singleSend(JSONObject param, ChannelHandlerContext ctx);
     
-    public void groupSend(JSONObject param, ChannelHandlerContext ctx);
+//    public void groupSend(JSONObject param, ChannelHandlerContext ctx);
     
     public void FileMsgSingleSend(JSONObject param, ChannelHandlerContext ctx);
     
-    public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx);
+//    public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx);
     
     public void remove(ChannelHandlerContext ctx);
     

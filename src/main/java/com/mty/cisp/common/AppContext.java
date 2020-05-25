@@ -1,8 +1,5 @@
 package com.mty.cisp.common;
 
-
-import com.mty.cisp.dao.GroupInfoDao;
-import com.mty.cisp.dao.UserInfoDao;
 import com.mty.cisp.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +19,10 @@ public class AppContext {
 //    @Autowired
 //    private WebSocketServer webSocketServer;
     private WebSocketServer webSocketServer = new WebSocketServer();
-    @Autowired
-    private UserInfoDao userInfoDao;
-    @Autowired
-    private GroupInfoDao groupDao;
+//    @Autowired
+//    private UserInfoDao userInfoDao;
+//    @Autowired
+//    private GroupInfoDao groupDao;
     
     private Thread nettyThread;
     
@@ -40,10 +37,10 @@ public class AppContext {
         nettyThread = new Thread(webSocketServer);
         logger.info("开启独立线程，启动Netty WebSocket服务器...");
         nettyThread.start();
-        logger.info("加载用户数据...");
-        userInfoDao.loadUserInfo();
-        logger.info("加载用户交流群数据...");
-        groupDao.loadGroupInfo();
+//        logger.info("加载用户数据...");
+//        userInfoDao.loadUserInfo();
+//        logger.info("加载用户交流群数据...");
+//        groupDao.loadGroupInfo();
     }
 
     /**

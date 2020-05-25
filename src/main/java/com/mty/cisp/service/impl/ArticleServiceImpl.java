@@ -105,4 +105,9 @@ public class ArticleServiceImpl implements ArticleService {
   public int getToUserIdByArticleId(Integer articleId) {
     return articleMapper.getToUserIdByArticleId(articleId);
   }
+
+  @Override
+  public String getTitleByArticleId(Integer articleId) {
+    return articleMapper.getTitleByArticleId(articleId);
+  }
 }

@@ -2,7 +2,6 @@ package com.mty.cisp.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mty.cisp.utils.FileUtil;
-import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -18,9 +17,10 @@ public class QiniuService {
     private static String ACCESS_KEY = "bWrGI_GoEE6cQ7xV0aMhcUjLkD3o0d0_wYvJ_AXI";
     private static String SECRET_KEY = "PS1gjVDwVxVmGyME1Lhgxhy7_SdBF9-MzBYJdCb5";
     //要上传的空间
-    private static String bucketname = "amzc";
+    private static String bucketname = "amzc2";
     //设置服务器域名
-    private static String QINIU_IMAGE_DOMAIN ="http://q8gyj1a32.bkt.clouddn.com/";
+//    private static String QINIU_IMAGE_DOMAIN ="http://q8gyj1a32.bkt.clouddn.com/";
+    private static String QINIU_IMAGE_DOMAIN ="http://qa42hmc5q.bkt.clouddn.com/";
 
     public static String saveImage(MultipartFile file){
         try {
@@ -57,7 +57,9 @@ public class QiniuService {
 
     //创建上传对象
     private static UploadManager getUploadManager() {
-        Configuration cfg = new Configuration(Zone.zone0());
+        //zone.zone0()代表服务器存储区域为华东
+//        Configuration cfg = new Configuration(Zone.zone0());
+        Configuration cfg = new Configuration(Zone.zone2());
         return new UploadManager(cfg);
     }
 }

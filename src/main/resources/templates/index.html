@@ -55,15 +55,24 @@
 <div class="fly-panel fly-column">
   <div class="layui-container">
     <ul class="layui-clear">
-      <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
+      <li class="layui-hide-xs layui-this">
+        <i class="layui-icon">&#xe609;</i>
+        <a href="/">首页</a>
+      </li>
 
       <#if Session['user']?exists>
 
-        <li><a href="/user/${user.id}">个人中心</a></li>
+        <li>
+          <i class="layui-icon">&#xe61b;</i>
+          <a href="/user/${user.id}">个人中心</a>
+        </li>
         <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
           <span class="fly-mid"></span></li>
         <!-- 用户登入后显示 -->
-        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/user/center">我发布的信息</a>
+        <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block">
+          <i class="layui-icon">&#xe606;</i>
+          <a href="/user/center">消息中心</a>
+          <span class="layui-badge-dot" style="margin-left: 39px"></span>
         </li>
       </#if>
     </ul>
@@ -219,12 +228,14 @@
         <div class="fly-panel-title">
           公告
         </div>
-        <div class="fly-panel-main" style="color: gray">
-          &nbsp;&nbsp;&nbsp;致力于提供一个和平交流的动漫平台，丰富人们的娱乐生活，通过用户的贴吧讨论和动漫消息推送，让更多的人接触和了解动漫。
-        </div>
-        <div class="fly-panel-main" style="text-align: right">
-          2020-03-20
-        </div>
+        <#list publicList as public>
+          <div class="fly-panel-main" style="color: gray">
+            &nbsp;&nbsp;&nbsp; ${public.content}
+          </div>
+          <div class="fly-panel-main" style="text-align: right">
+            ${public.time}
+          </div>
+        </#list>
       </div>
 
       <div class="fly-panel fly-link">

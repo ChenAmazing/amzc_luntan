@@ -184,7 +184,7 @@ pre{padding: 10px 15px; margin: 10px 0; font-size: 12px; border-left: 6px solid 
 /* 专栏 */
 .fly-column{height: 50px; line-height: 50px;}
 .fly-column ul li{position: relative; display: inline-block; height: 50px;}
-.fly-column ul li a{padding: 0 20px;}
+.fly-column ul li a{padding: 0 10px;}
 .fly-column ul li.layui-this:after{ position: absolute; bottom: 13px; left: 8px; z-index: 0; width: 50px; height: 22px; border: 1px solid #5FB878; border-radius: 2px;}
 .fly-column ul li.layui-this a{color: #5FB878;}
 .fly-column ul li .fly-mid{margin: 0 20px;}

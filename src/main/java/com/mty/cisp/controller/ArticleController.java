@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.mty.cisp.asnyc.EventModel;
 import com.mty.cisp.asnyc.EventProduct;
 import com.mty.cisp.asnyc.EventType;
-import com.mty.cisp.domain.Article;
-import com.mty.cisp.domain.Category;
-import com.mty.cisp.domain.Comment;
-import com.mty.cisp.domain.User;
+import com.mty.cisp.domain.*;
 import com.mty.cisp.service.*;
 import com.mty.cisp.utils.FileUtil;
 import com.mty.cisp.utils.ReturnJson;
@@ -19,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +25,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/article")
 public class ArticleController {
-
+  private final int USERID = 9;
+  private final String USERNAME = "amzc";
+  private String PUBLIC = "公告";
+  private int isReaded = 0;
   @Resource
   ArticleService articleService;
 
@@ -56,8 +55,8 @@ public class ArticleController {
   @ResponseBody
   public ReturnJson upload(HttpServletRequest request, MultipartFile file) {
     System.out.println("测试上传图片!!!===");
-//    String imgUrl = FileUtil.upload(file);
     String imgUrl = qiniuService.saveImage(file);
+    System.out.println(imgUrl);
     Map<String, String> imgMap = new HashMap<>();
     imgMap.put("src", imgUrl);
     imgMap.put("title", file.getOriginalFilename());
@@ -182,6 +181,10 @@ public class ArticleController {
       JSONObject json = JSON.parseObject(param);
       Integer articleId = json.getInteger("value");
       articleService.setTopStatus(articleId);
+      //置顶通知
+      if(articleService.getArticleById(articleId).getTop()){
+        eventProduct.fireModel(new EventModel(EventType.setTop).setObjectStr(JSONObject.toJSONString(articleId)));
+      }
       return new ReturnJson("置顶成功");
     } catch (Exception e) {
       return new ReturnJson(1, "置顶失败");
@@ -191,12 +194,19 @@ public class ArticleController {
   @RequestMapping(value = "/changeIsReaded",method = {RequestMethod.POST})
   @ResponseBody
   public ReturnJson changeIsReaded(@RequestBody int id){
-    System.out.println(id);
     int result = notifyService.changeIsReaded(id);
     if(result == 1){
       return new ReturnJson("success");
     }else{
       return new ReturnJson("error");
     }
+  }
+
+  @ResponseBody
+  @RequestMapping(value = "/publicAdd",method = RequestMethod.POST)
+  public ReturnJson publicAdd(HttpServletRequest request,@RequestBody String publicText) {
+    String text = publicText.substring(1,publicText.length()-1);
+    notifyService.addNotify(new Notify(USERID,-1,PUBLIC,isReaded,text,null,USERNAME,"-1",-1));
+    return new ReturnJson(0,"发布成功");
   }
 }
